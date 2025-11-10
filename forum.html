@@ -12,6 +12,7 @@ body {
   height: 100vh;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   color: #e0e0e0;
   position: relative;
   background: radial-gradient(circle at center, #090909 0%, #050505 100%);
@@ -23,13 +24,7 @@ body::before {
   position: absolute;
   width: 200%;
   height: 200%;
-  background: conic-gradient(
-    from 180deg,
-    #007bff,
-    #00ffcc,
-    #8a2be2,
-    #007bff
-  );
+  background: conic-gradient(from 180deg, #007bff, #00ffcc, #8a2be2, #007bff);
   animation: rotate 10s linear infinite;
   filter: blur(180px);
   z-index: 0;
@@ -39,7 +34,63 @@ body::before {
   100% { transform: rotate(360deg); }
 }
 
+/* ===== Futuristic Navbar ===== */
+nav {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(10,10,10,0.6);
+  border-bottom: 1px solid rgba(0,255,255,0.2);
+  backdrop-filter: blur(15px);
+  z-index: 2;
+  box-shadow: 0 0 20px rgba(0,255,255,0.1);
+}
+.nav-links {
+  display: flex;
+  gap: 40px;
+  padding: 15px 0;
+}
+.nav-links a {
+  position: relative;
+  text-decoration: none;
+  color: #00ffff;
+  font-weight: 600;
+  font-size: 1.05em;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: 0.3s ease;
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #007bff, #00ffff);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+.nav-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.nav-links a:hover {
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #007bff;
+}
+
 /* ===== Layout ===== */
+#mainContent {
+  display: flex;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Sidebar ===== */
 #sidebar {
   width: 260px;
   background: rgba(20, 20, 20, 0.85);
@@ -254,27 +305,41 @@ body::before {
 @media (max-width: 768px) {
   #sidebar { display: none; }
   #chatContainer { width: 100%; }
+  .nav-links { gap: 20px; }
 }
 </style>
 </head>
 <body>
+<!-- Futuristic Navbar -->
+<nav>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Skills</a>
+    <a href="#">Projects</a>
+    <a href="#">Forum</a>
+  </div>
+</nav>
+
 <div id="nicknameModal">
   <h2>Welcome to Forum Chatboard 💬</h2>
   <input type="text" id="nicknameInput" placeholder="Enter nickname..." />
   <button onclick="setNickname()">Join Chat</button>
 </div>
 
-<div id="sidebar">
-  <h2>Online Users ✅</h2>
-  <div id="onlineUsers"></div>
-</div>
+<div id="mainContent">
+  <div id="sidebar">
+    <h2>Online Users ✅</h2>
+    <div id="onlineUsers"></div>
+  </div>
 
-<div id="chatContainer">
-  <div id="messages"></div>
-  <div id="typingIndicator"></div>
-  <div id="inputArea">
-    <input id="messageInput" placeholder="Type a message..." autocomplete="off" />
-    <button id="sendBtn">Send</button>
+  <div id="chatContainer">
+    <div id="messages"></div>
+    <div id="typingIndicator"></div>
+    <div id="inputArea">
+      <input id="messageInput" placeholder="Type a message..." autocomplete="off" />
+      <button id="sendBtn">Send</button>
+    </div>
   </div>
 </div>
 
