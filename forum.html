@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Forum Chatboard</title>
+<style>
+/* ===== Global Reset ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Poppins", Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  color: #e0e0e0;
+  position: relative;
+  background: radial-gradient(circle at center, #090909 0%, #050505 100%);
+}
+
+/* ===== Animated Futuristic Background ===== */
+body::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 180deg,
+    #007bff,
+    #00ffcc,
+    #8a2be2,
+    #007bff
+  );
+  animation: rotate 10s linear infinite;
+  filter: blur(180px);
+  z-index: 0;
+}
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== Layout ===== */
+#sidebar {
+  width: 260px;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  z-index: 1;
+}
+#sidebar h2 {
+  text-align: center;
+  color: #00ffff;
+  font-size: 1.3em;
+  text-shadow: 0 0 8px #00ffff;
+  margin-bottom: 10px;
+}
+#onlineUsers {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #00ffff #1a1a1a;
+}
+#onlineUsers div {
+  margin: 8px 0;
+  padding: 10px;
+  background: rgba(0, 255, 255, 0.08);
+  border-radius: 8px;
+  transition: 0.3s;
+}
+#onlineUsers div:hover {
+  background: rgba(0, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+/* ===== Chat Container ===== */
+#chatContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(15px);
+  background: rgba(10, 10, 10, 0.7);
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Messages ===== */
+#messages {
+  flex: 1;
+  padding: 20px 25px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #007bff transparent;
+}
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+  animation: slideIn 0.3s ease forwards;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.bubble {
+  padding: 10px 14px;
+  border-radius: 14px;
+  max-width: 70%;
+  word-wrap: break-word;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0,255,255,0.15);
+  backdrop-filter: blur(4px);
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+}
+.message.self {
+  align-items: flex-end;
+}
+.message.self .bubble {
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  border: 1px solid #00ffff55;
+  color: #fff;
+}
+.message.self .bubble::after {
+  right: 10px;
+  border-top-color: #00d4ff;
+}
+.message.other .bubble {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.message.other .bubble::after {
+  left: 10px;
+  border-top-color: rgba(255,255,255,0.1);
+}
+
+/* ===== Meta Info ===== */
+.meta {
+  font-size: 0.75em;
+  color: #aaa;
+  margin-top: 3px;
+  user-select: none;
+}
+.meta span {
+  opacity: 0.8;
+}
+
+/* ===== Typing Indicator ===== */
+#typingIndicator {
+  font-size: 0.9em;
+  color: #00ffff;
+  margin: 5px 25px;
+  font-style: italic;
+  text-shadow: 0 0 8px #00ffff;
+}
+
+/* ===== Input Area ===== */
+#inputArea {
+  display: flex;
+  border-top: 1px solid rgba(0,255,255,0.2);
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+}
+#messageInput {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 1em;
+  transition: 0.2s;
+}
+#messageInput:focus {
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 10px #00ffff;
+}
+#sendBtn {
+  width: 100px;
+  margin-left: 10px;
+  background: linear-gradient(90deg, #007bff, #00ffff);
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+#sendBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffff;
+}
+
+/* ===== Nickname Modal ===== */
+#nicknameModal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 999;
+}
+#nicknameModal h2 {
+  color: #00ffff;
+  font-size: 1.8em;
+  text-shadow: 0 0 10px #00ffff;
+  margin-bottom: 20px;
+}
+#nicknameModal input {
+  padding: 12px 18px;
+  font-size: 1.2em;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  background: #1e1e1e;
+  color: #fff;
+  text-align: center;
+  width: 260px;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+#nicknameModal input:focus {
+  box-shadow: 0 0 15px #00ffff;
+}
+#nicknameModal button {
+  padding: 12px 25px;
+  background: linear-gradient(90deg, #007bff, #00ffff);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: 0.3s;
+}
+#nicknameModal button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #chatContainer { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div id="nicknameModal">
+  <h2>Welcome to Forum Chatboard 💬</h2>
+  <input type="text" id="nicknameInput" placeholder="Enter nickname..." />
+  <button onclick="setNickname()">Join Chat</button>
+</div>
+
+<div id="sidebar">
+  <h2>Online Users ✅</h2>
+  <div id="onlineUsers"></div>
+</div>
+
+<div id="chatContainer">
+  <div id="messages"></div>
+  <div id="typingIndicator"></div>
+  <div id="inputArea">
+    <input id="messageInput" placeholder="Type a message..." autocomplete="off" />
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+let nickname = "";
+const messagesDiv = document.getElementById("messages");
+const input = document.getElementById("messageInput");
+const typingIndicator = document.getElementById("typingIndicator");
+const onlineUsersDiv = document.getElementById("onlineUsers");
+
+function setNickname() {
+  const inputNick = document.getElementById("nicknameInput").value.trim();
+  if (!inputNick) return;
+  nickname = inputNick;
+  socket.emit("set_nickname", nickname);
+  document.getElementById("nicknameModal").style.display = "none";
+}
+
+function formatTime() {
+  const d = new Date();
+  return `${d.getHours().toString().padStart(2,"0")}:${d.getMinutes().toString().padStart(2,"0")}`;
+}
+
+function appendMessage(data, self = false) {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", self ? "self" : "other");
+
+  const bubble = document.createElement("div");
+  bubble.classList.add("bubble");
+  bubble.textContent = data.msg;
+
+  const meta = document.createElement("div");
+  meta.classList.add("meta");
+  meta.innerHTML = `<span>${data.nickname}</span> • ${formatTime()}`;
+
+  msgDiv.appendChild(bubble);
+  msgDiv.appendChild(meta);
+  messagesDiv.appendChild(msgDiv);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+document.getElementById("sendBtn").onclick = () => {
+  const msg = input.value.trim();
+  if (msg) {
+    socket.emit("chat_message", { nickname, msg });
+    input.value = "";
+  }
+};
+
+input.addEventListener("keypress", () => {
+  socket.emit("typing", nickname);
+});
+
+socket.on("chat_message", data => {
+  appendMessage(data, data.nickname === nickname);
+});
+
+socket.on("typing", nick => {
+  typingIndicator.textContent = `${nick} is typing...`;
+  clearTimeout(window.typingTimeout);
+  window.typingTimeout = setTimeout(() => typingIndicator.textContent = "", 1500);
+});
+
+socket.on("update_users", users => {
+  onlineUsersDiv.innerHTML = users.map(u => `<div>👤 ${u}</div>`).join("");
+});
+
+socket.on("load_messages", msgs => {
+  msgs.forEach(m => appendMessage(m, m.nickname === nickname));
+});
+</script>
+</body>
+</html>

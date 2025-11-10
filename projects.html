@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Lab Projects</title>
+
+  <style>
+    /* ---------- NAVIGATION BAR ---------- */
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+.nav-wire {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #00ffaa40, #00ff9d80, #00ffaa40);
+  border-radius: 50px;
+  padding: 6px 14px;
+  box-shadow: 0 0 15px #00ff9d70;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-bead {
+  display: inline-block;
+  margin: 0 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: "Courier New", monospace;
+  color: #00ffcc;
+  text-decoration: none;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #00ffcc60;
+  box-shadow: inset 0 0 10px #00ffcc30, 0 0 10px #00ffcc40;
+  transition: all 0.3s ease;
+}
+
+.nav-bead:hover {
+  background: #00ffcc;
+  color: #000;
+  box-shadow: 0 0 25px #00ffcc;
+  transform: translateY(-2px);
+}
+
+.nav-bead.active {
+  background: linear-gradient(90deg, #00ffaa, #0077ff);
+  color: #000;
+  border: 1px solid #00ffff;
+  box-shadow: 0 0 20px #00ffff;
+}
+
+.nav-wire:hover {
+  box-shadow: 0 0 25px #00ffcc90;
+}
+
+/* ---------- RESPONSIVE: VERTICAL MODE ---------- */
+@media (max-width: 700px) {
+  .nav-wire {
+    flex-direction: column;
+    padding: 10px;
+    background: linear-gradient(180deg, #00ffaa40, #00ff9d80, #00ffaa40);
+  }
+
+  .nav-bead {
+    margin: 8px 0;
+    width: 120px;
+    text-align: center;
+  }
+
+  .nav-bead:hover {
+    transform: translateX(3px);
+  }
+}
+
+    /* ---------- GLOBAL STYLING ---------- */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Courier New", monospace;
+      color: #00ff9d;
+      background-color: #000;
+      overflow-x: hidden;
+    }
+
+    /* ---------- TERMINAL INTRO ---------- */
+    #terminal {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: black;
+      color: #00ff9d;
+      font-size: 1.2rem;
+      white-space: pre-wrap;
+      text-align: left;
+      padding: 20px;
+    }
+
+    /* ---------- DASHBOARD CONTAINER ---------- */
+    #dashboard {
+      display: none; /* hidden until intro completes */
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ff9d;
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ff9d;
+    }
+
+    /* ---------- PROJECT CARDS ---------- */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .project-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #00ff9d;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px #00ff9d30;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px #00ff9d70;
+    }
+
+    .project-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, #00ff9d20, transparent);
+      transition: all 0.5s ease;
+    }
+
+    .project-card:hover::before {
+      left: 100%;
+    }
+
+    .project-title {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      color: #00ff9d;
+      text-shadow: 0 0 10px #00ff9d;
+    }
+
+    .project-desc {
+      color: #b0ffda;
+      font-size: 1em;
+      margin-bottom: 15px;
+    }
+
+    .project-tech {
+      font-size: 0.9em;
+      color: #66ffaa;
+      margin-bottom: 15px;
+    }
+
+    .project-links a {
+      color: #00ff9d;
+      text-decoration: none;
+      border: 1px solid #00ff9d;
+      border-radius: 8px;
+      padding: 5px 10px;
+      margin-right: 10px;
+      transition: 0.3s;
+    }
+
+    .project-links a:hover {
+      background-color: #00ff9d;
+      color: black;
+    }
+
+    /* ---------- DEMO FRAME ---------- */
+    .demo-frame {
+      margin-top: 15px;
+      width: 100%;
+      height: 200px;
+      border: none;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    /* ---------- TYPEWRITER ANIMATION ---------- */
+    .typewriter span {
+      border-right: 3px solid #00ff9d;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent;
+      }
+    }
+    .demo-frame {
+  width: 100%;
+  max-width: 900px;        /* Limits width on large screens */
+  height: 500px;           /* Good height for project demos */
+  border: 2px solid #00ffaa;
+  border-radius: 15px;
+  margin: 1.5rem auto;     /* Centers the frame */
+  display: block;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(3px);
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.demo-frame:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 35px rgba(0, 255, 255, 0.8);
+  border-color: #00ffff;
+}
+
+.project-links a.live-btn {
+  background: linear-gradient(90deg, #00ffcc, #0077ff);
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(0,255,255,0.4);
+}
+
+.project-links a.live-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #0077ff, #00ffcc);
+  box-shadow: 0 0 20px rgba(0,255,255,0.6);
+}
+
+.demo-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.demo-image {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.demo-image:hover {
+  transform: scale(1.02);
+}
+
+.demo-note {
+  font-size: 0.9rem;
+  color: #00ffee;
+  margin-top: 10px;
+  text-shadow: 0 0 10px rgba(0,255,255,0.6);
+}
+
+
+  </style>
+</head>
+
+<body>
+  <div id="terminal"></div>
+      <!-- NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="nav-wire">
+      <a href="index.html" class="nav-bead">Home</a>
+      <a href="about.html" class="nav-bead">About</a>
+      <a href="skills.html" class="nav-bead">Skills</a>
+      <a href="projects.html" class="nav-bead active">Projects</a>
+      <a href="forum.html" class="nav-bead">Docs</a>
+    </div>
+  </nav>
+
+  <br>
+  <br>
+    <div id="dashboard">
+        <h1>Project Dashboard</h1>
+
+        <div class="project-grid">
+            <div class="project-card">
+                <div class="project-title">Project Leon</div>
+                    <div class="project-desc">
+                        <p>
+                            <b>Project Name:</b> <i>Leon Gaming Blog</i> by <b>Venkatesh</b> — A dynamic, premium web platform designed as an
+                            interactive newsletter for curated gaming content. This project demonstrates a robust frontend powered by
+                            <b>HTML</b>, <b>Tailwind CSS</b>, and <b>JavaScript</b>, ensuring a responsive and visually captivating user experience.
+                        </p>
+
+                        <h4>🎯 Key Features:</h4>
+                            <ul>
+                                <li>
+                                <b>🎮 Intuitive Game Prioritization:</b>  
+                                Categorizes upcoming games into <i>High</i>, <i>Moderate</i>, and <i>Low Priority</i> levels — helping users quickly
+                                identify must-watch releases.
+                                </li>
+
+                                <li>
+                                <b>📺 Embedded Media Integration:</b>  
+                                Seamlessly embeds <b>YouTube game trailers</b> for immediate visual context and engagement.
+                                </li>
+
+                                <li>
+                                <b>🔴 Dynamic Livestream Status:</b>  
+                                Integrated a custom <b>Netlify Serverless Function</b> to fetch and display the latest livestream link from YouTube
+                                in real-time. Automatically shows a “<b>Live NOW!</b>” badge with a direct access link to the broadcast.
+                                </li>
+
+                                <li>
+                                <b>💬 Enhanced Community Engagement:</b>  
+                                Added a dedicated <b>Discord section</b> to connect players and creators, strengthening the community ecosystem.
+                                </li>
+
+                                <li>
+                                <b>🧠 Premium UI/UX:</b>  
+                                Designed a <b>dark-themed</b> modern interface with smooth transitions, responsive layouts, and glowing accents
+                                for a futuristic look.
+                                </li>
+                            </ul>
+                        <p>
+                            This project highlights practical expertise in <b>modern web development</b>, focusing on performance, interactivity,
+                            and design precision. It establishes a professional foundation for gaming content creators to share, engage, and grow their audience effectively.
+                        </p>
+                    </div>
+
+                    <div class="project-tech">
+                        🧩 <b>Tech Stack:</b> HTML, CSS, JavaScript <!-- replace with actual tech you used -->
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/Venkey2238/projectLeon" target="_blank">GitHub</a>
+                        <a href="https://glittering-kataifi-25fc68.netlify.app/" target="_blank">Live Demo</a>
+                    </div>
+                    <div class="demo-container">
+                        <iframe class="demo-frame" src="https://glittering-kataifi-25fc68.netlify.app/" title="Project Leon Live Demo"></iframe>
+                    </div>
+            </div>
+        </div>
+        <br>
+        <div class="project-grid">
+            <div class="project-card">
+                <div class="project-title">Fraud Email Detection System</div>
+                    <div class="project-desc">
+                        <p>
+                            <b>Project Name:</b> <i>Fraud Email Detection System</i> by <b>Venkatesh</b> — A powerful AI-driven application designed
+                            to detect fraudulent and spam messages using advanced Natural Language Processing (NLP) techniques.
+                            The system is built on the <b>BERT (Bidirectional Encoder Representations from Transformers)</b> algorithm — the same technology
+                            used by <b>Google Search</b> — adapted to classify and identify fake or malicious emails with high precision.
+                        </p>
+
+                        <h4>🎯 Project Overview:</h4>
+                        <ul>
+                            <li>
+                                <b>🤖 Deep Learning Core:</b>  
+                                The model is powered by <b>BERT</b>, one of the most advanced transformer-based architectures for language understanding.
+                                It enables the system to analyze the meaning of messages contextually rather than just by keywords.
+                            </li>
+
+                            <li>
+                                <b>📨 Multi-Source Detection:</b>  
+                                Capable of identifying fraudulent content not only in emails but also in <b>SMS messages</b>, making it useful for
+                                general spam detection across communication channels.
+                            </li>
+
+                            <li>
+                                <b>📊 Accuracy & Performance:</b>  
+                                Achieved an impressive <b>93% accuracy</b> in detecting fake or phishing content during testing, ensuring
+                                strong reliability for real-world use.
+                            </li>
+
+                            <li>
+                                <b>🧠 Tools & Technologies:</b>  
+                                Developed using <b>Python</b> for model training and inference, and <b>Streamlit</b> to build a simple, interactive web interface
+                                that connects directly with the model for real-time predictions.
+                            </li>
+
+                            <li>
+                                <b>💡 Purpose of the Project:</b>  
+                                With phishing and spam scams rising globally, this project was created to help users protect themselves
+                                by quickly verifying suspicious emails or text messages using AI.
+                            </li>
+                        </ul>
+
+                        <p>
+                            Due to its <b>deep learning model size</b> and <b>computational intensity</b>, the project cannot currently be hosted on free-tier
+                            online servers. Hence, a live demo is unavailable — but the full source code, model setup instructions, and documentation
+                            are provided in the GitHub repository.
+                        </p>
+                    </div>
+
+                    <div class="project-tech">
+                        🧩 <b>Tech Stack:</b> Python, Streamlit, BERT, NLP, Deep Learning
+                    </div>
+
+                    <div class="project-links">
+                        <a href="https://github.com/Venkey2238/Fraud-Email-Detector" target="_blank">GitHub</a>
+                        <span class="no-demo">⚠️ No Live Demo (Heavy Model)</span>
+                    </div>
+            </div>
+        </div>
+        <br>
+        <div class="project-grid">
+            <div class="project-card">
+                <div class="project-title">Digitized and Decentralized Blockchain Technology</div>
+                    <div class="project-desc">
+                        <p>
+                            <b>Project Name:</b> <i>Digitized and Decentralized Blockchain Technology</i> by <b>Venkatesh</b> — 
+                            A conceptual and practical project aimed at educating users about the 
+                            <b>fundamentals of blockchain technology</b>, how decentralized systems function, 
+                            and why they offer greater <b>security</b>, <b>transparency</b>, and <b>trust</b> in online transactions.
+                        </p>
+                        <h4>🎯 Project Overview:</h4>
+                        <ul>
+                            <li>
+                                <b>🔗 Decentralized Transaction System:</b>  
+                                Designed and built a <b>peer-to-peer (P2P)</b> transaction platform where each node 
+                                validates and records transactions without relying on a central authority.
+                            </li>
+                            <li>
+                                <b>💰 Solving the “Double Spending” Problem:</b>  
+                                Implemented a mechanism that ensures no digital currency can be spent more than once — 
+                                maintaining integrity and preventing fraud across all transactions.
+                            </li>
+                            <li>
+                                <b>📜 Educational Purpose:</b>  
+                                The project doubles as an <b>interactive learning tool</b> to demonstrate how blockchain 
+                                works behind the scenes — from <b>block creation</b> to <b>hash validation</b> and 
+                                <b>ledger synchronization</b>.
+                            </li>
+                            <li>
+                                <b>⚙️ Technical Implementation:</b>  
+                                Developed using <b>Python</b> and the <b>Django framework</b>, with essential blockchain 
+                                logic implemented using Python libraries for hashing, timestamping, and distributed ledger management.
+                            </li>
+                            <li>
+                                <b>🔐 Security & Transparency:</b>  
+                                Showcases how decentralization removes single points of failure and builds trust 
+                                among participants through cryptographic verification.
+                            </li>
+                            <li>
+                                <b>🌍 Broader Impact:</b>  
+                                Educates users and developers about the potential of <b>Web3 and decentralized technologies</b> — 
+                                encouraging adoption of secure digital ecosystems in everyday transactions.
+                            </li>
+                        </ul>
+                        <p>
+                            This project serves as both a <b>learning model</b> and a <b>functional demonstration</b> of blockchain principles. 
+                            While it’s currently a prototype-level implementation, it effectively communicates the importance of 
+                            secure, transparent, and decentralized systems in the digital era.
+                        </p>
+                    </div>
+                    <div class="project-tech">
+                        🧩 <b>Tech Stack:</b> Python, Django, Blockchain, Cryptography
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/Venkey2238/BlockchainTechnology" target="_blank">GitHub</a>
+                        <a href="https://new-site-1.onrender.com/" target="_blank" >Live Demo</a>
+                    </div>
+                    <div class="demo-container">
+                        <img src="assests/ddbt.png" alt="Blockchain Project Preview" class="demo-image" />
+                        <p class="demo-note">
+                            ⚠️ This project is heavy and hosted on a secure backend.  
+                        <b>Live demo may not load inside the portfolio</b> — click the button above to view it separately.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+    const dashboard = document.getElementById("dashboard");
+
+    const terminalText = `
+> Initializing PROJECT_LAB_SYSTEM...
+> Loading project cores................. OK
+> Authenticating user.................. VERIFIED
+> Deploying Project Interface............... READY
+> Access granted.
+
+Welcome,
+Feteching all the projects...
+Accessing Project Dashboard...
+`;
+
+    let index = 0;
+    function typeEffect() {
+      if (index < terminalText.length) {
+        terminal.innerHTML =
+          "<div class='typewriter'>" +
+          terminalText.slice(0, index + 1).replace(/\n/g, "<br>") +
+          "<span></span></div>";
+        index++;
+        setTimeout(typeEffect, 40); // typing speed
+      } else {
+        setTimeout(() => {
+          terminal.style.display = "none";
+          dashboard.style.display = "block";
+        }, 1000);
+      }
+    }
+
+    typeEffect();
+  </script>
+</body>
+</html>

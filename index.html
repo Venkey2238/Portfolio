@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        portfolio
+    </title>
+
+      <style>
+      /* ===== Navigation Bar ===== */
+  nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.7);
+  perspective: 1000px;
+  gap: 40px;
+}
+
+/* ===== Cube Container ===== */
+.cube {
+  position: relative;
+  width: 120px;
+  height: 50px;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 1.5s ease-in-out;
+  cursor: pointer;
+}
+
+/* ===== Each Face of Cube ===== */
+.face {
+  position: absolute;
+  width: 120px;
+  height: 50px;
+  background: linear-gradient(90deg, #00ff40, #00ffff, #ff00ff, #ffff00);
+  background-size: 800% 800%;
+  animation: colorChange 7s ease infinite;
+  color: black;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  box-shadow: 0 0 10px rgba(255,255,255,0.4);
+}
+
+/* ===== Positions of Faces ===== */
+.front  { transform: translateZ(25px); }
+.back   { transform: rotateY(180deg) translateZ(25px); }
+.top    { transform: rotateX(90deg) translateZ(25px); }
+.bottom { transform: rotateX(-90deg) translateZ(25px); }
+
+/* ===== Gradient Animation ===== */
+@keyframes colorChange {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== Hover Glow ===== */
+.cube:hover {
+  box-shadow: 0 0 20px #0ff;
+}
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('assests/Cozy2.png'); /* path to your image */
+            background-size: cover;       /* makes it fill the screen */
+            background-position: center;  /* keeps image centered */
+            background-repeat: no-repeat; /* prevents image from repeating */
+            height: 100vh;                /* ensures full-screen background */
+            overflow: hidden;
+        }
+
+
+
+    .hero {
+        display: flex;
+        flex-direction: column;     /* stack name & email vertically */
+        justify-content: center;    /* center vertically */
+        align-items: center;        /* center horizontally */
+        height: 70vh;              /* take full screen height */
+        text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 60px;
+      color: green;
+    }
+    .hero p {
+    font-size: 1.2rem;
+    color: #555;
+    }
+    #terminal {
+    background-color: #111;
+    padding: 2px 10px;
+    border-radius: 1115px;
+    box-shadow: 0 0 20px #6200ff;
+    min-width: 400px;
+    }
+
+    #typing {
+    font-family: monospace;
+    font-size: 28px;
+    white-space: pre; /* preserve spacing */
+    }
+
+  /* Blinking cursor */
+  #typing::after {
+    content: "|";
+    animation: blink 0.7s infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  .gif {
+    position: fixed;
+    margin: 0;
+    bottom: 0px;   /*distance from bottom screen */
+    left: 0px;     /*distance form left scrren */
+    width: 300px;
+    height: auto;
+    z-index: 1000; 
+    pointer-events: none;
+    user-select: none;
+    transform: translateZ(0);  /*stablize the rendering */
+    justify-content: flex-start;
+  }
+
+
+  </style>
+</head>
+<body>
+    <header>
+        <nav>
+  <div class="cube" onclick="goTo('index.html')">
+    <div class="face front">Home</div>
+    <div class="face back">About</div>
+    <div class="face top">Skills</div>
+    <div class="face bottom">Projects</div>
+    <div class="face right">Forum</div>
+  </div>
+
+  <div class="cube" onclick="goTo('about.html')">
+    <div class="face front">About</div>
+    <div class="face back">Skills</div>
+    <div class="face top">Projects</div>
+    <div class="face bottom">Forum</div>
+    <div class="face right">Home</div>
+  </div>
+
+  <div class="cube" onclick="goTo('skills.html')">
+    <div class="face front">Skills</div>
+    <div class="face back">Projects</div>
+    <div class="face top">Forum</div>
+    <div class="face bottom">Home</div>
+    <div class="face right">About</div>
+  </div>
+
+  <div class="cube" onclick="goTo('projects.html')">
+    <div class="face front">Projects</div>
+    <div class="face back">Forum</div>
+    <div class="face top">Home</div>
+    <div class="face bottom">About</div>
+    <div class="face right">Skills</div>
+  </div>
+
+  <div class="cube" onclick="goTo('forum.html')">
+    <div class="face front">Forum</div>
+    <div class="face back">Home</div>
+    <div class="face top">About</div>
+    <div class="face bottom">Skills</div>
+    <div class="face right">Projects</div>
+  </div>
+</nav>
+      </header>
+
+    <section class="hero">
+      <div id = "terminal">
+        <h1 id = "typing">Venkatesh Chilukamari</h1>
+      </div>
+    </section>
+    <img src="assests/wave.gif" alt="AI Assistant" class="gif">
+    <script>
+    const textElement = document.getElementById("typing");
+
+    const lines = [
+      'Hello World!',
+      'print("My-Name")',
+      'Venkatesh Chilukamari'
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+      const currentLine = lines[lineIndex];
+      const displayText = currentLine.substring(0, charIndex);
+      textElement.textContent = displayText;
+
+      if (!isDeleting && charIndex < currentLine.length) {
+        charIndex++;
+        setTimeout(typeEffect, 115); // typing speed
+      } else if (isDeleting && charIndex > 0) {
+        charIndex--;
+        setTimeout(typeEffect, 50); // deleting speed
+      } else {
+        if (!isDeleting) {
+          isDeleting = true;
+          setTimeout(typeEffect, 1000); // pause before erase
+        } else {
+          isDeleting = false;
+          lineIndex = (lineIndex + 1) % lines.length; // move to next text
+          setTimeout(typeEffect, 500);
+        }
+      }
+    }
+
+    typeEffect();
+  </script>
+  <script>
+    function goTo(link) {
+    window.location.href = link;
+    }
+
+    // random rotation loop
+    setInterval(() => {
+      document.querySelectorAll('.cube').forEach(cube => {
+        const rotateX = Math.random() > 0.5 ? 0 : 360;
+        const rotateY = Math.random() > 0.5 ? 0 : 360;
+        cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    }, 2000); // rotate every 3 seconds
+</script>
+</body>
+</html>

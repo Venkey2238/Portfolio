@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Self-Diagnosis Console — Venkatesh Chilukamari</title>
+<style>
+  :root {
+    --bg: #020202;
+    --accent: #00ff99;
+    --accent2: #00c3ff;
+    --font: 'Courier New', monospace;
+  }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: radial-gradient(circle at center, #050505 0%, #000 100%);
+    color: var(--accent);
+    font-family: var(--font);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  nav {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 255, 153, 0.05);
+  border: 1px solid rgba(0, 255, 153, 0.3);
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 0 15px rgba(0,255,153,0.2);
+  backdrop-filter: blur(8px);
+  gap: 16px; /* equal space between items */
+}
+
+/* Make all nav items uniform rectangular beads */
+.nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #00c3ff;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+
+  width: 130px;
+  height: 40px;
+
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 12px;
+  background: rgba(0,255,153,0.05);
+  box-shadow: 0 0 6px rgba(0,255,153,0.15);
+
+  transition: all 0.3s ease;
+}
+
+/* Neon hover effect */
+.nav-item:hover {
+  color: #00ff99;
+  border-color: #00ff99;
+  box-shadow: 0 0 15px #00ff99, inset 0 0 5px #00ff99;
+  transform: translateY(-2px);
+}
+
+/* Subtle flicker glow */
+.nav-item:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #00c3ff;
+  opacity: 0.6;
+  animation: flicker 0.3s infinite alternate;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.8; }
+}
+
+  .console {
+    width: 90%;
+    max-width: 900px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,255,153,0.25);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(0,255,153,0.15);
+    min-height: 400px;
+  }
+
+  .title {
+    color: var(--accent2);
+    font-weight: 900;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+  }
+  #output {
+    white-space: pre-wrap;
+    line-height: 1.45;
+    font-size: 0.95rem;
+  }
+  .cursor {
+    display: inline-block;
+    width: 9px;
+    height: 16px;
+    background: var(--accent);
+    animation: blink 0.7s infinite;
+    vertical-align: bottom;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR START ===== -->
+  <nav>
+  <a href="index.html" class="nav-item">[HOME]</a>
+  <a href="about.html" class="nav-item">[ABOUT]</a>
+  <a href="skills.html" class="nav-item">[SKILLS]</a>
+  <a href="projects.html" class="nav-item">[PROJECTS]</a>
+  <a href="forum.html" class="nav-item">[DOCS]</a>
+</nav>
+  <!-- ===== NAVBAR END ===== -->
+<br>
+  <div class="console">
+    <div class="title">AI SELF-DIAGNOSIS CONSOLE — v1.0</div>
+    <div id="output"></div>
+  </div>
+
+<script>
+const lines = [
+  "Initializing system…",
+  "Running neural self-check…",
+  "Loading profile: Venkatesh Chilukamari",
+  "",
+  ">>> Core Identity: AI-Enhanced Developer | Future System Engineer",
+  ">>> Location: Telangana, India",
+  ">>> Mission: Build adaptive systems that merge AI + Human logic",
+  "",
+  ">>> Current Objective:",
+  "     - I’m a passionate and resilient tech enthusiast driven by curiosity, perseverance, and a genuine love for learning.",
+  " ",
+  "     - My journey into technology hasn’t been the smoothest one I’ve faced setbacks and challenges, and despite being without a job since 2023, I’ve never stopped learning, and believing in my potential.",
+  " ",
+  "     - My academic background gave me a solid foundation in coding and problem-solving, but most of what I’ve learned has come from long nights of self-study, personal projects, and countless moments of trial and error.", 
+  " ",
+  "     - Over the past two years, I’ve dedicated myself to mastering AI enhanced development, focusing on cloud-native systems, microservices architecture, and distributed computing. I’ve also strengthened my skills in Python, Java, and JavaScript, while exploring AI integration, LangChain, and RAG-based systems to understand how intelligent automation can redefine modern web solutions. ",
+  " ",
+  "     - What drives me is the dream of designing scalable, secure, and adaptive systems that truly make an impact. I may not have a formal title yet, but I have the mindset of a developer someone who keeps learning, keeps building, and never gives up. All I’m looking for is a chance an opportunity to prove my skills, contribute to a great team, and grow into the engineer I know I can be. If you’re looking for someone who brings not just technical ability but also heart, grit, and an unwavering commitment to improvement that’s me.",
+  " ",
+  ">>> Long-Term Goal:",
+  "     - Become a full-stack system engineer integrating AI for automation and resilience",
+  "",
+  "Diagnostics complete — System stable.",
+  "Awaiting next upgrade…"
+];
+
+const output = document.getElementById("output");
+let i = 0;
+
+function typeLine(line, delay = 30) {
+  return new Promise(resolve => {
+    let index = 0;
+    const interval = setInterval(() => {
+      output.innerHTML = output.innerHTML.replace('<span class="cursor"></span>', '');
+      output.innerHTML += line[index] || '';
+      index++;
+      if (index > line.length) {
+        clearInterval(interval);
+        output.innerHTML += "\n";
+        output.innerHTML += '<span class="cursor"></span>';
+        window.scrollTo(0, document.body.scrollHeight);
+        setTimeout(resolve, 200);
+      }
+    }, delay);
+  });
+}
+
+async function startTyping() {
+  for (let line of lines) {
+    await typeLine(line);
+  }
+}
+startTyping();
+</script>
+</body>
+</html>
