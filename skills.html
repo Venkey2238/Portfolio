@@ -6,9 +6,7 @@
 <title>AI Neural Skill Matrix</title>
 
 <style>
-  /* ===============================
-   🌐 Neural Ribbon Navigation
-   =============================== */
+
 .neural-nav {
   display: flex;
   justify-content: center;
@@ -44,7 +42,6 @@
   transform: translateY(-2px);
 }
 
-/* Active link pulse (current page) */
 .neural-link.active {
   color: #00ffcc;
   border-color: #00ffcc;
@@ -56,7 +53,6 @@
   50% { box-shadow: 0 0 35px #00ffff, inset 0 0 10px #00ffcc; }
 }
 
-/* Connecting filaments between links */
 .neural-nav::before {
   content: "";
   position: absolute;
@@ -75,7 +71,6 @@
   100% { opacity: 0.4; }
 }
 
-/* Optional subtle floating effect */
 .neural-link {
   animation: floatLink 5s ease-in-out infinite;
 }
@@ -135,13 +130,11 @@
     transform: scale(1.1);
   }
 
-  /* 🌟 Node Glow Animation */
   @keyframes pulseGlow {
     0%, 100% { box-shadow: 0 0 10px #00ffff, inset 0 0 10px #00ffaa; }
     50% { box-shadow: 0 0 25px #00ffff, inset 0 0 15px #00ffaa; }
   }
 
-  /* 📊 Hover Progress Bar */
   .node::after {
     content: '';
     position: absolute;
@@ -157,7 +150,6 @@
     width: var(--skill-level, 0%);
   }
 
-  /* 🧩 Tooltip bubble */
   .tooltip {
     position: absolute;
     background: rgba(0, 0, 0, 0.85);
@@ -174,7 +166,6 @@
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
 
-  /* 🧭 Instruction Overlay */
   .instructions {
     position: fixed;
     bottom: 10px;
@@ -196,7 +187,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ⚙️ AI Scan Mode Button */
   #scanMode {
     position: fixed;
     top: 15px;
@@ -269,14 +259,12 @@ function resize() {
 resize();
 window.addEventListener("resize", resize);
 
-/* --- Floating Motion --- */
 const motion = nodes.map(() => ({
   x: (Math.random() - 0.5) * 0.3,
   y: (Math.random() - 0.5) * 0.3,
   frozen: false
 }));
 
-/* --- Particle System for Neural Pulses --- */
 const pulses = [];
 function createPulse(x1, y1, x2, y2) {
   pulses.push({
@@ -298,7 +286,6 @@ function drawPulse(p) {
   ctx.shadowBlur = 0;
 }
 
-/* --- Animate --- */
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -315,7 +302,6 @@ function animate() {
     }
   });
 
-  // Draw connections
   nodes.forEach((n1, i) => {
     const r1 = n1.getBoundingClientRect();
     nodes.forEach((n2, j) => {
@@ -350,7 +336,6 @@ function animate() {
     });
   });
 
-  // Draw neural pulses
   for (let i = pulses.length - 1; i >= 0; i--) {
     const p = pulses[i];
     drawPulse(p);
@@ -362,7 +347,6 @@ function animate() {
 }
 animate();
 
-/* --- Tooltip Events --- */
 nodes.forEach((n, i) => {
   n.addEventListener("mouseenter", e => {
     tooltip.style.opacity = "1";
@@ -381,7 +365,6 @@ nodes.forEach((n, i) => {
   });
 });
 
-/* --- AI Scan Mode --- */
 let scanMode = false;
 document.getElementById("scanMode").addEventListener("click", () => {
   scanMode = !scanMode;
