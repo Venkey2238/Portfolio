@@ -7,7 +7,6 @@
     </title>
 
       <style>
-      /* ===== Navigation Bar ===== */
   nav {
   display: flex;
   justify-content: center;
@@ -18,7 +17,6 @@
   gap: 40px;
 }
 
-/* ===== Cube Container ===== */
 .cube {
   position: relative;
   width: 120px;
@@ -29,7 +27,6 @@
   cursor: pointer;
 }
 
-/* ===== Each Face of Cube ===== */
 .face {
   position: absolute;
   width: 120px;
@@ -49,20 +46,17 @@
   box-shadow: 0 0 10px rgba(255,255,255,0.4);
 }
 
-/* ===== Positions of Faces ===== */
 .front  { transform: translateZ(25px); }
 .back   { transform: rotateY(180deg) translateZ(25px); }
 .top    { transform: rotateX(90deg) translateZ(25px); }
 .bottom { transform: rotateX(-90deg) translateZ(25px); }
 
-/* ===== Gradient Animation ===== */
 @keyframes colorChange {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* ===== Hover Glow ===== */
 .cube:hover {
   box-shadow: 0 0 20px #0ff;
 }
@@ -238,7 +232,7 @@
         const rotateY = Math.random() > 0.5 ? 0 : 360;
         cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
-    }, 2000); // rotate every 3 seconds
+    }, 2000); 
 </script>
 </body>
 </html>
