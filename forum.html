@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Forum Chatboard</title>
 <style>
-/* ===== Global Reset ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: "Poppins", Arial, sans-serif;
@@ -18,7 +17,6 @@ body {
   background: radial-gradient(circle at center, #090909 0%, #050505 100%);
 }
 
-/* ===== Animated Futuristic Background ===== */
 body::before {
   content: "";
   position: absolute;
@@ -34,7 +32,6 @@ body::before {
   100% { transform: rotate(360deg); }
 }
 
-/* ===== Futuristic Navbar ===== */
 nav {
   position: relative;
   width: 100%;
@@ -82,7 +79,6 @@ nav {
   text-shadow: 0 0 10px #00ffff, 0 0 20px #007bff;
 }
 
-/* ===== Layout ===== */
 #mainContent {
   display: flex;
   flex: 1;
@@ -90,7 +86,6 @@ nav {
   z-index: 1;
 }
 
-/* ===== Sidebar ===== */
 #sidebar {
   width: 260px;
   background: rgba(20, 20, 20, 0.85);
@@ -126,7 +121,6 @@ nav {
   transform: scale(1.05);
 }
 
-/* ===== Chat Container ===== */
 #chatContainer {
   flex: 1;
   display: flex;
@@ -137,7 +131,6 @@ nav {
   z-index: 1;
 }
 
-/* ===== Messages ===== */
 #messages {
   flex: 1;
   padding: 20px 25px;
